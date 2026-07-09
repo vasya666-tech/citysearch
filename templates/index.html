@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Cities</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <header>
+        <div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div>
+            <div class="center">
+                <input type="text" id="myInput">
+                <button type="button" class="save" onclick="trade()">Save</button>
+                <button type="button" class="clear" onclick="document.getElementById('myInput').value=''">Clear</button>
+            </div>
+            <h1 id="header" style="display: none; font-size: 20px;"></h1>
+            <h3 style="display: inline">Population: </h3>
+            <p id="result" style='display: none;
+            '></p>
+            <h3 style="display: inline;"><br>Description: </h3>
+            <p id="dscr" style="display: none;"></p>
+
+        </div>
+    </main>
+
+    <footer>
+
+    </footer>
+    
+    <script>
+            function trade() {
+                const cityName = document.getElementById("myInput").value;
+                const result = document.getElementById('result');
+                const header = document.getElementById('header');
+                const description = document.getElementById('dscr');
+                
+                fetch("/trade", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({ message: cityName })
+                })
+                .then(response => response.json())
+                .then(data => {console.log(data)
+                    if ("population" in data && "description" in data) {
+                        result.textContent = `${cityName} has a population of ${data.population}!`
+                        result.style.display = "block"
+                        description.textContent = data.description
+                        description.style.display = "block"
+
+                        header.textContent = "City: " + cityName
+                        header.style.display = "block"
+                    } else if ("error" in data) {
+                        header.style.display = "block"
+                        header.textContent = data.error
+                        description.style.display = "none";
+                        result.style.display = "none";
+                    }
+                })
+            }
+            
+    </script>
+</body>
+
+</html>
