@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, select
 from os import getenv
 from dotenv import load_dotenv
-import psycopg2
+import psycopg
 
 load_dotenv()
 DB = getenv('DB_URL')
@@ -39,6 +39,7 @@ def trade():
         city_name = city_name.title()
     population = connection.execute(select(city.c.population).where(city.c.name == city_name)).scalar()
     description = connection.execute(select(city.c.description).where(city.c.name == city_name)).scalar()
+    image = connection.execute(select(city.c.image).where(city.c.name == city_name)).scalar()
     if population is not None and description is not None:
-        return jsonify({"name": city_name, "population": population, "description": description})
+        return jsonify({"name": city_name, "population": population, "description": description, "image": image})
     return jsonify({"error": "Try another city, please."}), 404
