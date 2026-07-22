@@ -63,3 +63,19 @@ body {
   color: #f8fafc;
   min-height: 100vh;
 }
+
+.box {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease;
+}
+
+.box.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+img {
+  width: 400px;
+  height: 300px;
+}
