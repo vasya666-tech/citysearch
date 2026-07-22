@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, select
 from os import getenv
 from dotenv import load_dotenv
-import psycopg
+import psycopg2
 
 load_dotenv()
 DB = getenv('DB_URL')
