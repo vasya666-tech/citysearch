@@ -27,10 +27,10 @@
             </div>
             <h1 id="header" style="display: none; font-size: 20px;"></h1>
             <h3 style="display: inline">Population: </h3>
-            <p id="result" style='display: none;
-            '></p>
+            <p class="box" id="result"></p>
             <h3 style="display: inline;"><br>Description: </h3>
-            <p id="dscr" style="display: none;"></p>
+            <p class="box" id="dscr"></p>
+            <img id="img" class="box" alt="Error loading image..">
 
         </div>
     </main>
@@ -45,6 +45,8 @@
                 const result = document.getElementById('result');
                 const header = document.getElementById('header');
                 const description = document.getElementById('dscr');
+                const image = document.getElementById('img');
+                const boxes = document.querySelectorAll(".box");
                 
                 fetch("/trade", {
                     method: "POST",
@@ -53,19 +55,21 @@
                 })
                 .then(response => response.json())
                 .then(data => {console.log(data)
-                    if ("population" in data && "description" in data) {
-                        result.textContent = `${cityName} has a population of ${data.population}!`
-                        result.style.display = "block"
+                    image.src = data.image;
+                    if ("name" in data) {
+                        result.textContent = `${data.name} has a population of ${data.population}!`
                         description.textContent = data.description
-                        description.style.display = "block"
-
-                        header.textContent = "City: " + cityName
+                        boxes.forEach(box => {
+                            box.classList.add("visible");
+                        });
+                        header.textContent = "City: " + data.name
                         header.style.display = "block"
                     } else if ("error" in data) {
                         header.style.display = "block"
                         header.textContent = data.error
-                        description.style.display = "none";
-                        result.style.display = "none";
+                        boxes.forEach(box => {
+                            box.classList.remove("visible");
+                        });
                     }
                 })
             }
