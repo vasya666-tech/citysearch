@@ -17,7 +17,8 @@ city = Table(
     Column("id", Integer, primary_key=True),
     Column("name", String),
     Column("population", Integer),
-    Column("description", String)
+    Column("description", String),
+    Column("image", String)
     )
         
 app = Flask(__name__)
