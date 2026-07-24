@@ -19,20 +19,17 @@
     </header>
 
     <main>
-        <div>
-            <div class="center">
-                <input type="text" id="myInput">
-                <button type="button" class="save" onclick="trade()">Save</button>
-                <button type="button" class="clear" onclick="document.getElementById('myInput').value=''">Clear</button>
-            </div>
-            <h1 id="header" style="display: none; font-size: 20px;"></h1>
-            <h3 style="display: inline">Population: </h3>
-            <p class="box" id="result"></p>
-            <h3 style="display: inline;"><br>Description: </h3>
-            <p class="box" id="dscr"></p>
-            <img id="img" class="box" alt="Error loading image..">
-
+        <div class="center">
+            <input type="text" id="myInput" placeholder="Enter a city..">
+            <button type="button" class="save" onclick="trade()">Save</button>
+            <button type="button" class="clear" onclick="document.getElementById('myInput').value=''">Clear</button>
         </div>
+        <h1 id="header" style="display: none; font-size: 20px;"></h1>
+        <h3 style="display: inline">Population: </h3>
+        <p class="box" id="result"></p>
+        <h3 style="display: inline;"><br>Description: </h3>
+        <p class="box" id="dscr"></p>
+        <img id="img" class="box" alt="Error loading image..">
     </main>
 
     <footer>
@@ -48,6 +45,7 @@
                 const image = document.getElementById('img');
                 const boxes = document.querySelectorAll(".box");
                 
+                
                 fetch("/trade", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
@@ -55,10 +53,11 @@
                 })
                 .then(response => response.json())
                 .then(data => {console.log(data)
+                    const temperature = ` It's ${data.temperature} in ${data.name}.`
                     image.src = data.image;
                     if ("name" in data) {
                         result.textContent = `${data.name} has a population of ${data.population}!`
-                        description.textContent = data.description
+                        description.textContent = data.description + temperature
                         boxes.forEach(box => {
                             box.classList.add("visible");
                         });
