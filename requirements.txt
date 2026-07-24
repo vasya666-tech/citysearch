@@ -3,3 +3,4 @@ SQLAlchemy
 python-dotenv
 psycopg2-binary
 gunicorn
+requests==2.34.2
