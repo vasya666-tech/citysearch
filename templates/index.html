@@ -8,23 +8,28 @@
 
 <body>
     <header>
-        <div>
+        <div class="totheleft">
             <nav>
                 <ul>
-                    <li><a href="/">Home</a></li>
-
+                    <li><a href="/login" class="login">Log in</a></li>
+                    {% if logout %}
+                    <li><a href="/logout" class="logout">Log out</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
     </header>
 
     <main>
+        {% if username %}
+            <h1>Hi, <span>{{ username }}</span>!</h1>
+        {% endif %}
         <div class="center">
             <input type="text" id="myInput" placeholder="Enter a city..">
             <button type="button" class="save" onclick="trade()">Save</button>
             <button type="button" class="clear" onclick="document.getElementById('myInput').value=''">Clear</button>
         </div>
-        <h1 id="header" style="display: none; font-size: 20px;"></h1>
+        <h2 id="header" style="display: none; font-size: 20px;"></h1>
         <h3 style="display: inline">Population: </h3>
         <p class="box" id="result"></p>
         <h3 style="display: inline;"><br>Description: </h3>
@@ -52,27 +57,26 @@
                     body: JSON.stringify({ message: cityName })
                 })
                 .then(response => response.json())
-                .then(data => {console.log(data)
-                    const temperature = ` It's ${data.temperature} in ${data.name}.`
+                .then(data => {
+                    const temperature = `It's ${data.temperature} in ${data.name}.`
                     image.src = data.image;
                     if ("name" in data) {
                         result.textContent = `${data.name} has a population of ${data.population}!`
-                        description.textContent = data.description + temperature
+                        description.innerHTML = `${data.description}<br>${temperature}`
                         boxes.forEach(box => {
-                            box.classList.add("visible");
-                        });
+                            box.classList.add("visible")
+                        })
                         header.textContent = "City: " + data.name
                         header.style.display = "block"
                     } else if ("error" in data) {
                         header.style.display = "block"
                         header.textContent = data.error
                         boxes.forEach(box => {
-                            box.classList.remove("visible");
-                        });
+                            box.classList.remove("visible")
+                        })
                     }
                 })
             }
-            
     </script>
 </body>
 
