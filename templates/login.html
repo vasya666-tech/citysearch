@@ -22,8 +22,8 @@
         <input type="text" id="username" style="width: 400px" placeholder="Username">
         <input type="password" id="password" minlength="4" style="width: 400px" placeholder="Password">
         <div class="buttons">
-            <button type="button" class="pill red" onclick="login()">I already have an account</button>
-            <button type="button" class="pill blue" onclick="reg()">I dont have an account</button>
+            <button type="button" class="pill red" onclick="login()">Log in</button>
+            <button type="button" class="pill blue" onclick="reg()">Sign up</button>
         </div>
     </main>
     <script>
@@ -38,8 +38,11 @@
         )
         .then(response => response.json())
         .then(data => {
-            if (data.owned == true){
+            if (data.owned == true) {
                 document.getElementById("warning").style.display = "block"
+            } else if (data.error == 'The password must contain at least 4 characters!') {
+                document.getElementById('warning').innerHTML = data.error
+                document.getElementById('warning').style.display = "block"
             } else {
                 window.location.href = '/profile'
             }
