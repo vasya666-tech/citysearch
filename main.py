@@ -137,16 +137,23 @@ def trade():
     ).json()
     latitude = geo["results"][0]["latitude"]
     longitude = geo["results"][0]["longitude"]
-    weather_response = get("https://api.open-meteo.com/v1/forecast",
-                           params={
-                               "latitude": latitude,
-                               "longitude": longitude,
-                               "current": "temperature_2m"
-                           }
-                          )
-    weather_response.raise_for_status()
-    weather = weather_response.json()
-    temperature = f"{weather['current']['temperature_2m']}°C"
+    weather_response = get(
+        "https://api.open-meteo.com/v1/forecast",
+        params={
+            "latitude": latitude,
+            "longitude": longitude,
+            "current": "temperature_2m"
+        },
+        headers={
+            "User-Agent": "MyWeatherApp/1.0"
+        },
+        timeout=10 )
+    if weather_response.status_code == 429:
+        temperature = "N/A"
+    else:
+        weather_response.raise_for_status()
+        weather = weather_response.json()
+        temperature = f"{weather['current']['temperature_2m']}°C"
     population = connection.execute(select(city.c.population).where(city.c.name == city_name)).scalar()
     description = connection.execute(select(city.c.description).where(city.c.name == city_name)).scalar()
     image = connection.execute(select(city.c.image).where(city.c.name == city_name)).scalar()
