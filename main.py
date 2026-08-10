@@ -133,20 +133,19 @@ def trade():
             "name": city_name,
             "count": 1,
             "language": "en"
-            }
-        ).json()
-    latitude = geo['results'][0]['latitude']
-    longitude = geo['results'][0]['longitude']
-    
-    weather = get(
-        "https://api.open-meteo.com/v1/forecast",
-        params={
-            "latitude": latitude,
-            "longitude": longitude,
-            "current": "temperature_2m"
-            }
-        ).json()
-
+        }
+    ).json()
+    latitude = geo["results"][0]["latitude"]
+    longitude = geo["results"][0]["longitude"]
+    weather_response = get("https://api.open-meteo.com/v1/forecast",
+                           params={
+                               "latitude": latitude,
+                               "longitude": longitude,
+                               "current": "temperature_2m"
+                           }
+                          )
+    weather_response.raise_for_status()
+    weather = weather_response.json()
     temperature = f"{weather['current']['temperature_2m']}°C"
     population = connection.execute(select(city.c.population).where(city.c.name == city_name)).scalar()
     description = connection.execute(select(city.c.description).where(city.c.name == city_name)).scalar()
