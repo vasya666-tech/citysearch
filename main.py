@@ -59,6 +59,8 @@ def reg():
     data = request.get_json()
     username = data.get("user")
     password = data.get("passw")
+    if len(password) < 4:
+        return jsonify({"error": "The password must contain at least 4 characters!"})
     h = hashlib.sha512(password.encode()).hexdigest()
     id_bd = connection.execute(select(users.c.id).where(users.c.username == username)).fetchone()
     if not id_bd:
@@ -147,7 +149,8 @@ def trade():
         headers={
             "User-Agent": "MyWeatherApp/1.0"
         },
-        timeout=10 )
+        timeout=10
+        )
     if weather_response.status_code == 429:
         temperature = "N/A"
     else:
