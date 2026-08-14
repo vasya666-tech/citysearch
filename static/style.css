@@ -2,27 +2,34 @@ ul {
   list-style: none; /*turn off dots*/
 }
 
-.totheleft {
+.to-the-left {
   display: flex;
   margin-left: -10px; /*shift links to the left*/
   padding: 20px;
 }
 
+
+
 main {
     font-size: 25px;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-.login {
+.info {
+  margin-left: 10px;
+}
+
+.log-in {
   color: #2f9139;
 }
 
-.logout {
+.log-out {
   color: #dd0025;
 }
 
 nav {
     display: flex;
+    margin-top: -20px;
     width: 120px;
     height: 50px;
     font-size: 21px;
@@ -41,7 +48,7 @@ input {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,.08);
   color: white;
-  border-radius: 14px;
+  border-radius: 8px;
 }
 
 button {
@@ -51,6 +58,10 @@ button {
   color: white;
   cursor: pointer;
   font-size: 17px;
+}
+
+.search {
+  background-color: rgba(38, 125, 255, 0.8)
 }
 
 .save {
@@ -84,6 +95,7 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 50px;
 }
 
 .center2 {
@@ -155,5 +167,6 @@ img {
 }
 
 span {
-  color: rgb(0, 255, 255);
+  color: rgb(255, 208, 54);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
