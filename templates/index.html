@@ -8,12 +8,12 @@
 
 <body>
     <header>
-        <div class="totheleft">
+        <div class="to-the-left">
             <nav>
                 <ul>
-                    <li><a href="/login" class="login">Log in</a></li>
+                    <li><a href="/login" class="log-in">Log in</a></li>
                     {% if logout %}
-                    <li><a href="/logout" class="logout">Log out</a></li>
+                    <li><a href="/logout" class="log-out">Log out</a></li>
                     {% endif %}
                 </ul>
             </nav>
@@ -22,19 +22,26 @@
 
     <main>
         {% if username %}
-            <h1>Hi, <span>{{ username }}</span>!</h1>
+            <h1 style="margin: 5px; font-size: 40px;">Hi, <span>{{ username }}</span>!</h1>
         {% endif %}
         <div class="center">
             <input type="text" id="myInput" placeholder="Enter a city..">
-            <button type="button" class="save" onclick="trade()">Save</button>
+            <button type="button" class="search" onclick="trade()">Search</button>
             <button type="button" class="clear" onclick="document.getElementById('myInput').value=''">Clear</button>
+            {% if button %}
+                <button id="save" type="button" style="display: none;" class="save" onclick="save()">Save</button>
+            {% endif %}
         </div>
-        <h2 id="header" style="display: none; font-size: 20px;"></h1>
+        <div class="info">
+        <h2 id="header" style="display: flex; font-size: 20px; justify-content: center; margin-left: -30px;"></h1>
         <h3 style="display: inline">Population: </h3>
         <p class="box" id="result"></p>
         <h3 style="display: inline;"><br>Description: </h3>
         <p class="box" id="dscr"></p>
         <img id="img" class="box" alt="Error loading image..">
+        {% if button %}
+            <p id="flights" style="position: fixed; top: 20px; right: 20px;">{{ flights }}</p>
+        {% endif %}
     </main>
 
     <footer>
@@ -42,41 +49,59 @@
     </footer>
     
     <script>
-            function trade() {
-                const cityName = document.getElementById("myInput").value;
-                const result = document.getElementById('result');
-                const header = document.getElementById('header');
-                const description = document.getElementById('dscr');
-                const image = document.getElementById('img');
-                const boxes = document.querySelectorAll(".box");
-                
-                
-                fetch("/trade", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({ message: cityName })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    const temperature = `It's ${data.temperature} in ${data.name}.`
-                    image.src = data.image;
-                    if ("name" in data) {
-                        result.textContent = `${data.name} has a population of ${data.population}!`
-                        description.innerHTML = `${data.description}<br>${temperature}`
-                        boxes.forEach(box => {
-                            box.classList.add("visible")
-                        })
-                        header.textContent = "City: " + data.name
-                        header.style.display = "block"
-                    } else if ("error" in data) {
-                        header.style.display = "block"
-                        header.textContent = data.error
-                        boxes.forEach(box => {
-                            box.classList.remove("visible")
-                        })
-                    }
-                })
-            }
+        function trade() {
+            const cityName = document.getElementById("myInput").value;
+            const result = document.getElementById('result');
+            const header = document.getElementById('header');
+            const description = document.getElementById('dscr');
+            const image = document.getElementById('img');
+            const boxes = document.querySelectorAll(".box");
+            
+            
+            fetch("/trade", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ message: cityName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const temperature = `It's ${data.temperature} in ${data.name}.`
+                image.src = data.image;
+                if ("name" in data) {
+                    result.textContent = `${data.name} has a population of ${data.population}!`
+                    description.innerHTML = `${data.description}<br>${temperature}`
+                    boxes.forEach(box => {
+                        box.classList.add("visible")
+                    })
+                    header.textContent = "City: " + data.name
+                } else if ("error" in data) {
+                    header.textContent = data.error
+                    boxes.forEach(box => {
+                        box.classList.remove("visible")
+                    })
+                }
+                if (data.visible) {
+                    document.getElementById("save").style.display = "block"
+                }
+            })
+        }
+
+        function save () {
+            const cityName = document.getElementById("myInput").value;
+            fetch("/save", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ message: cityName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message)
+                if ("travel_list" in data) {
+                    document.getElementById('flights').innerHTML = data.travel_list
+                }
+                document.getElementById("save").style.display = "none"
+            })
+        }
     </script>
 </body>
 
