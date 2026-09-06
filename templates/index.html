@@ -9,38 +9,92 @@
 <body>
     <header>
         <div class="to-the-left">
-            <nav>
-                <ul>
-                    <li><a href="/login" class="log-in">Log in</a></li>
-                    {% if logout %}
-                    <li><a href="/logout" class="log-out">Log out</a></li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
-    </header>
+            <button onclick="sidebar()" id="sidebar-button">!</button>
+            <aside id="sidebar">
+                <nav>
+                    <ul>
+                        <div style="display: flex; gap: 10px;">
+                            <li>
+                                {% if logout %}
+                                    <button
+                                    type="button"
+                                    style="width: 90px; height: 26px; margin-bottom: 3px;"
+                                    class="log-out"
+                                    onclick="openModalLogout()">Log out</button>
 
-    <main>
-        {% if username %}
-            <h1 style="margin: 5px; font-size: 40px;">Hi, <span>{{ username }}</span>!</h1>
-        {% endif %}
-        <div class="center">
-            <input type="text" id="myInput" placeholder="Enter a city..">
-            <button type="button" class="search" onclick="trade()">Search</button>
-            <button type="button" class="clear" onclick="document.getElementById('myInput').value=''">Clear</button>
-            {% if button %}
-                <button id="save" type="button" style="display: none;" class="save" onclick="save()">Save</button>
-            {% endif %}
+                                    <button
+                                    type="button"
+                                    style="width: 90px; height: 28px; font-size: 14px;"
+                                    class="log-out"
+                                    onclick="openModalDelete()">Delete acc.</button>
+                                {% else %}
+                                    <a style="width: 50px; height: 24px;" href="/login" class="log-in">Log in</a>
+                                {% endif %}
+                            <li>
+                        </div>
+                    </ul>
+                </nav>
+            </aside>
         </div>
-        <div class="info">
-        <h2 id="header" style="display: flex; font-size: 20px; justify-content: center; margin-left: -30px;"></h1>
+        <h1 style="display: flex; align-items: center; justify-content: center; margin-top: -55px;">Citysearch: your world of travel</h1>
+    </header>
+    <div id="modalLogout" class="modal">
+        <div class="window">
+            <p>Are you sure you want to log out?</p>
+
+            <a style="
+            padding: 5px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;" href="logout" class="log-out">YES</a>
+            <button style="
+            color: #000000;
+            background-color: rgb(255, 255, 255);" onclick="closeModalLogout()">NO</button>
+        </div>
+    </div>
+    
+    <div id="modalDelete" class="modal">
+        <div class="window">
+            <p>Are you sure you want to delete your account?<br>Write "Delete it" to confirm your action.</p>
+            <input type="text" id="inputDelete" placeholder="Delete it">
+            <button type="button" style="background-color: red; padding: 10px;" onclick="confirmDelete()">Confirm</button>
+        </div>
+    </div>
+
+
+    <main style="margin-top: 25px;">
+        {% if username %}
+            <h2 style="margin: 5px; font-size: 20px;" >Hi, {{ username }}!</h1>
+        {% endif %}
+
+        <div class="center">
+            <div style="display: flex; column-gap: 6px;">
+                <input type="text" id="myInput" style="width: 400px; height: 35px" placeholder="Enter a city..">
+                <button type="button" class="clear" onclick="document.getElementById('myInput').value=''">Clear</button>
+                <button type="button" class="search" onclick="trade(this)">Search</button>
+                {% if button %}
+                <button id="save" type="button" style="display: none;" class="save" onclick="save()">Save</button>
+                {% else %}
+                <p id="save" style="display: flex; font-size: 12px; margin-left: 20px;"></p>
+                {% endif %}
+            </div>
+        </div>
+
+        <h2 id="header" style="display: flex; font-size: 20px; justify-content: center;"></h1>
+
         <h3 style="display: inline">Population: </h3>
         <p class="box" id="result"></p>
+
         <h3 style="display: inline;"><br>Description: </h3>
         <p class="box" id="dscr"></p>
+
+        <p class="box" id="temp"></p>
+
         <img id="img" class="box" alt="Error loading image..">
+
         {% if button %}
-            <p id="flights" style="position: fixed; top: 20px; right: 20px;">{{ flights }}</p>
+            <p id="flights" class="travels">{{ flights }}</p>
         {% endif %}
     </main>
 
@@ -49,8 +103,37 @@
     </footer>
     
     <script>
-        function trade() {
-            const cityName = document.getElementById("myInput").value;
+        function sidebar() {
+            if (document.getElementById('sidebar').style.display == 'none') {
+                document.getElementById('sidebar').style.display = 'flex'
+            } else {
+                document.getElementById('sidebar').style.display = 'none'
+            }
+        }
+
+        function openModalLogout() {
+            document.getElementById("modalLogout").classList.add("active");
+        }
+        function closeModalLogout() {
+            document.getElementById("modalLogout").classList.remove("active");
+        }
+
+        function openModalDelete() {
+            document.getElementById("modalDelete").classList.add("active");
+        }
+        function closeModalDelete() {
+            document.getElementById("modalDelete").classList.remove("active");
+        }
+
+        function trade(button) {
+            button.disabled = true;
+            button.style.backgroundColor = 'rgba(38, 125, 255, 0.4)'
+            setTimeout(() => {
+                button.disabled = false;
+                button.style.backgroundColor = 'rgba(38, 125, 255, 0.8)'
+            }, 3000);
+
+            const cityName = document.getElementById("myInput").value
             const result = document.getElementById('result');
             const header = document.getElementById('header');
             const description = document.getElementById('dscr');
@@ -65,11 +148,16 @@
             })
             .then(response => response.json())
             .then(data => {
-                const temperature = `It's ${data.temperature} in ${data.name}.`
+                const temperature = `It's ${data.temperature}°C in ${data.name}.`
                 image.src = data.image;
+
                 if ("name" in data) {
                     result.textContent = `${data.name} has a population of ${data.population}!`
-                    description.innerHTML = `${data.description}<br>${temperature}`
+                    description.textContent = data.description
+
+                    if (Number.isFinite(data.temperature)) {
+                        document.getElementById('temp').textContent = temperature
+                    }
                     boxes.forEach(box => {
                         box.classList.add("visible")
                     })
@@ -80,14 +168,25 @@
                         box.classList.remove("visible")
                     })
                 }
-                if (data.visible) {
-                    document.getElementById("save").style.display = "block"
+
+                if (data.visible && window.location.pathname === "/profile") {
+                    document.getElementById("save").style.display = "block";
+                } else if (data.visible && window.location.pathname === "/") {
+                    document.getElementById("save").textContent = "Log in to add the city to your travel list."
                 }
             })
         }
 
+        const input = document.getElementById("myInput")
+        input.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                trade()
+            }
+        });
+
         function save () {
             const cityName = document.getElementById("myInput").value;
+
             fetch("/save", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
@@ -96,11 +195,20 @@
             .then(response => response.json())
             .then(data => {
                 console.log(data.message)
+                
                 if ("travel_list" in data) {
-                    document.getElementById('flights').innerHTML = data.travel_list
+                    document.getElementById('flights').textContent = data.travel_list
                 }
                 document.getElementById("save").style.display = "none"
             })
+        }
+
+        function confirmDelete() {
+            if (document.getElementById('inputDelete').value == 'Delete it') {
+                closeModalDelete()
+                fetch('/delete', {method: 'POST'})
+                .then(() => {window.location.href = '/'})
+            }
         }
     </script>
 </body>
