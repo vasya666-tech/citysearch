@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Cities</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <header>
+        <div class="to-the-left">
+            <nav>
+                <ul>
+                    <li><a href="/" class="home">Home</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h1 style="font-size: 30px;"><b>Cookies</b></h1>
+        <p style="font-size: 25px;">
+            {% if error %}
+            This page does not exist, try another one, or return home. (the link above) 
+            {% elif cookies %}
+            I use essential cookies to authenticate users.<br>
+            After logging into an account,
+            a JWT token is stored in a cookie to maintain the authenticated session.<br>
+            This token is not used for advertising or user tracking.
+            {% endif %}
+        </p>
+    </main>
+</body>
+
+</html>
