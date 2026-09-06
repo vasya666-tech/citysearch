@@ -8,67 +8,102 @@
 
 <body>
     <header>
-        <div>
+        <div class="to-the-left">
             <nav>
                 <ul>
-                    <li><a href="/">Home</a></li>
-
+                    <li><a href="/" class="home">Home</a></li>
                 </ul>
             </nav>
         </div>
     </header>
     <main class="center2">
-        <h1 id="warning" style="display: none">That username is already taken!</h1>
-        <input type="text" id="username" style="width: 400px" placeholder="Username">
-        <input type="password" id="password" minlength="4" style="width: 400px" placeholder="Password">
+        <div id="modal" class="modal">
+            <div class="window">
+                <p>What should I call you?</p>
+                <input type="text" id='username' autocomplete='nickname' placeholder="Username">
+                <button href="/profile" class="log-out" onclick="confirmUsername()"
+                style="margin-top: 5px;">Call me like that!</a>
+            </div>
+        </div>
+        <h1 id="warning"></h1>
+        <input type="text" id="email" placeholder="Email">
+        <input type="password" id="password" minlength="4" placeholder="Password">
         <div class="buttons">
             <button type="button" class="pill red" onclick="login()">Log in</button>
             <button type="button" class="pill blue" onclick="reg()">Sign up</button>
         </div>
+        <input type="text" id="code" placeholder="Code" style="display: none;">
+        <button type="button" id="verify" onclick="reg_confirm()" style="display: none; color: black">Verify code</button>
     </main>
     <script>
+        let username = null
+
+        function confirmUsername() {
+            username = document.getElementById('username').value
+            closeModal()
+            fetch("/confirm", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ username: username, user: email, code: user_code, passw: password })})
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('warning').textContent = data.error
+                    }
+                    else {
+                        window.location.href = '/profile'
+                    }
+                })
+        }
+
+        function openModal() {
+            document.getElementById("modal").classList.add("active");
+        }
+
+        function closeModal() {
+            document.getElementById("modal").classList.remove("active");
+        }
+
         function reg() {
-            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
             fetch("/reg", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ user: username, passw: password})
-            }
-        )
-        .then(response => response.json())
-        .then(data => {
-            if (data.owned == true) {
-                document.getElementById("warning").style.display = "block"
-            } else if (data.error == 'The password must contain at least 4 characters!') {
-                document.getElementById('warning').innerHTML = data.error
-                document.getElementById('warning').style.display = "block"
+                body: JSON.stringify({ user: email, passw: password })
+            })
+            .then(response => response.json())
+            .then(data => {if (data.owned == true) {
+                document.getElementById('warning').textContent = 'That email is already in use!'
+            } else if (data.error) {
+                document.getElementById('warning').textContent = data.error
             } else {
-                window.location.href = '/profile'
+                document.getElementById('code').style.display = "block"
+                document.getElementById('verify').style.display = "block"
             }
         })
     }
 
+        function reg_confirm() {
+            email = document.getElementById('email').value
+            user_code = document.getElementById('code').value
+            password = document.getElementById('password').value
+            openModal()
+            }
+
         function login() {
-            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
             fetch("/login", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ user: username, passw: password})
+                body: JSON.stringify({ user: email, passw: password})
             }
         )
         .then(response => response.json())
         .then(data => {
-            if (data.error == "The password is incorrect") {
-                document.getElementById('warning').innerHTML = data.error
-                document.getElementById('warning').style.display = "block"
-            } else if (data.error == "User is not found.") {
-                document.getElementById('warning').innerHTML = data.error
-                document.getElementById('warning').style.display = "block"
-            } else if (data.error == 'The password must contain at least 4 characters!') {
-                document.getElementById('warning').innerHTML = data.error
-                document.getElementById('warning').style.display = "block"
+            if (data.error) {
+                document.getElementById('warning').textContent = data.error
             } else {
                 window.location.href = '/profile'
             }
@@ -78,3 +113,4 @@
 </body>
 
 </html>
+
