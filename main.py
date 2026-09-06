@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify, make_response, redir
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, select, update, delete
 from os import getenv
 from dotenv import load_dotenv
-import psycopg
+import psycopg2
 from requests import get
 from datetime import datetime, timedelta, timezone
 import hashlib
