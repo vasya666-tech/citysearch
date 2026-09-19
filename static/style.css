@@ -1,6 +1,7 @@
 html, body {
   height: 100%;
   margin: 0;
+  min-height: 128vh;
 }
 
 h3 {
@@ -8,10 +9,9 @@ h3 {
 }
 
 header {
-  height: 80px;
+  height: 100px;
   background:
   radial-gradient(rgb(20, 20, 20));
-  top: 0
 }
 
 a {
@@ -22,31 +22,15 @@ a {
 }
 
 #sidebar-button {
+  display: flex;
+  margin-top: -40px;
+  margin-right: -20px;
   background-color: rgb(68, 68, 68);
   font-size: 20px;
-  width: 50px;
-  height: 25px;
 }
 
 #sidebar {
   display: none;
-  width: 132px;
-  height: 80px;
-}
-
-.to-the-left {
-  background:
-  radial-gradient(rgb(40, 40, 40));
-  display: flex;
-  margin-left: -10px; /*shift links to the left*/
-  width: 120px;
-  height: 80px;
-  font-size: 20px;
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  .links {
-      border-radius: 20px;
-      box-shadow: 0 10px 30px #0005;
-  }
 }
 
 .home {
@@ -105,30 +89,14 @@ input {
 }
 
 button {
-  padding: 5px 16px;
   border: none;
   border-radius: 4px;
   color: white;
   cursor: pointer;
   font-size: 16px;
-}
-
-.search {
-  background-color: rgba(38, 125, 255, 0.8);
-  height: 35px;
-  border-radius: 10px;
-}
-
-.save {
-  background-color: rgba(107, 183, 128, 0.9);
-  height: 35px;
-  border-radius: 10px;
-}
-
-.clear {
-  background-color: rgba(183, 62, 80, 0.9);
-  height: 35px;
-  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.25s;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
 }
 
 button:hover {
@@ -136,27 +104,11 @@ button:hover {
 }
 
 body {
-  min-height: 100vh;
   color: #e6e5e5;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-
   background:
   linear-gradient(45deg, rgba(15, 101, 15, 0.224) 20%, rgba(18, 121, 25, 0.342) 40%, transparent 65%),
   linear-gradient(225deg, rgba(7, 7, 7, 0.5) 20%, rgba(46, 44, 44, 0.5) 40%, transparent 45%),
-  radial-gradient(circle 200px at 85% 20%, rgba(6, 6, 6, 0.74) 10%, rgba(67, 92, 124, 0.34) 30%, rgba(249, 251, 254, 0.189) 45%, transparent 55%)
   rgba(24, 24, 24, 0.972);
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
-}
-
-ul {
-  list-style: none; /*turn off dots*/
-}
-
-li {
-  margin-left: -9px;
 }
 
 .travels {
@@ -209,43 +161,61 @@ img {
 }
 
 .pill {
-    border: none;
-    border-radius: 50px;
-    padding: 14px 28px;
-    margin: 8px;
-    color: white;
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.25s;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 50px;
+  padding: 14px 28px;
+  margin: 2px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
 }
 
 .red {
-    background: linear-gradient(135deg, #ff0033, #8b0018);
-    box-shadow: 0 0 15px rgba(255, 0, 50, 0.5);
+  background: linear-gradient(135deg, #ff0033, #8b0018);
+  box-shadow: 0 0 15px rgba(255, 0, 50, 0.5);
 }
 
 .blue {
-    background: linear-gradient(135deg, #0066ff, #001b8f);
-    box-shadow: 0 0 15px rgba(0, 100, 255, 0.5);
+  background: linear-gradient(135deg, #0066ff, #001b8f);
+  box-shadow: 0 0 15px rgba(0, 100, 255, 0.5);
+}
+
+.green {
+  background: linear-gradient(135deg, #33ff00, #008f00);
+  box-shadow: 0 0 15px rgba(9, 255, 0, 0.5);
 }
 
 .red:hover {
-    transform: scale(1.06);
-    box-shadow: 0 0 25px rgba(255, 0, 50, 0.8);
+  transform: scale(1.06);
+  box-shadow: 0 0 25px rgba(255, 0, 50, 0.8);
 }
 
 .blue:hover {
-    transform: scale(1.06);
-    box-shadow: 0 0 25px rgba(0, 100, 255, 0.8);
+  transform: scale(1.06);
+  box-shadow: 0 0 25px rgba(0, 100, 255, 0.8);
+}
+
+.green:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 25px rgba(100, 255, 50, 0.8);
 }
 
 .red:active,
-.blue:active {
-    transform: scale(0.96);
+.blue:active,
+.green:active {
+  transform: scale(0.96);
 }
 
 .buttons {
   display: flex;
+}
+
+.topic {
+  background: rgb(138, 138, 138);
+}
+
+#table {
+  margin: 15px 0;
+  color: black;
+  background-color: rgb(255, 255, 255);
 }
