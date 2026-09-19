@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, jsonify, make_response, redirect, url_for
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, select, update, delete
-from os import getenv
-from dotenv import load_dotenv
+from config import DB_URL, KEY, GMAIL, APP_PSWD
 import psycopg2
 from requests import get
 from datetime import datetime, timedelta, timezone
@@ -11,13 +10,10 @@ from time import time
 import smtplib
 from secrets import randbelow
 
-load_dotenv()
-DB = getenv('DB_URL')
-KEY = getenv('KEY')
-ID = getenv('CLIENT_ID')
-SECRET = getenv('CLIENT_SECRET')
-GMAIL = getenv('GMAIL')
-APP_PSWD = getenv('APP_PSWD')
+DB = DB_URL
+KEY = KEY
+GMAIL = GMAIL
+APP_PSWD = APP_PSWD
 
 engine = create_engine(DB)
 connection = engine.connect()
@@ -48,6 +44,10 @@ app = Flask(__name__)
 @app.errorhandler(404) 
 def not_found(e):
     return render_template('base.html', error=True)
+
+@app.get('/ips')
+def ips():
+    return  render_template('base.html', ips=True)
 
 @app.get('/cookies')
 def cookies():
