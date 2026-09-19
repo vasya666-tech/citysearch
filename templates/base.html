@@ -8,13 +8,9 @@
 
 <body>
     <header>
-        <div class="to-the-left">
-            <nav>
-                <ul>
-                    <li><a href="/" class="home">Home</a></li>
-                </ul>
-            </nav>
-        </div>
+        <nav>
+            <a href="/" class="home">Home</a>
+        </nav>
     </header>
 
     <main>
@@ -27,6 +23,10 @@
             After logging into an account,
             a JWT token is stored in a cookie to maintain the authenticated session.<br>
             This token is not used for advertising or user tracking.
+            {% elif ips %}
+            I store the IP addresses of users who submitted an authorization code for spam protection purposes.<br>
+            I cannot view these IP addresses, and they are deleted whenever the site is redeployed.<br>
+            I hope for your understanding.
             {% endif %}
         </p>
     </main>
